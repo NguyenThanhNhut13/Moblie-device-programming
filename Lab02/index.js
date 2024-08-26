@@ -7,3 +7,15 @@ Array.prototype.myForEach = function(callback) {
 }
 
 arr.myForEach((item, index) => console.log(item + ' at index ' + index));
+
+// Rewrite Array map method
+Array.prototype.myMap = function(callback) {
+    const result = [];
+    for (let i = 0; i < this.length; i++) {
+        result.push(callback(this[i], i, this));
+    }
+    return result;
+}
+console.log('Using myMap method');
+const newArr = arr.myMap((item, index) => item * 2);
+console.log(newArr);
