@@ -19,3 +19,17 @@ Array.prototype.myMap = function(callback) {
 console.log('Using myMap method');
 const newArr = arr.myMap((item, index) => item * 2);
 console.log(newArr);
+
+// Rewrite Array filter method
+Array.prototype.myFilter = function(callback) {
+    const result = [];
+    for (let i = 0; i < this.length; i++) {
+        if (callback(this[i], i, this)) {
+            result.push(this[i]);
+        }
+    }
+    return result;
+}
+console.log('Using myFilter method for filtering even numbers');
+const filteredArr = arr.myFilter((item, index) => item % 2 === 0);
+console.log(filteredArr);
