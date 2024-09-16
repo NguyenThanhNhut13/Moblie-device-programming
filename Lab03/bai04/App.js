@@ -4,11 +4,6 @@ import {LinearGradient} from 'expo-linear-gradient';
 import { useState } from 'react';
 
 export default function App() {
-  const [email, setEmail] = useState('');
-
-  const handleNext = () => {
-    console.log('Next pressed with email:', email);
-  };
 
   return (
     <LinearGradient
