@@ -1,21 +1,81 @@
 import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity } from 'react-native';
+import { useState, useEffect } from 'react';
 
-const ProductDetailScreen = ({navigation}) => {
+export const phones = [
+  {
+    id: 1,
+    name: 'Điện thoại Vsmart Joy 3 - Hàng chính hãng',
+    rating: 5,
+    currentPrice: '1.790.000 đ',
+    oldPrice: '1.790.000 đ',
+    color: 'xanh dương',
+    supplier: 'Tiki Trading',
+    image: require('../assets/phone/vs_blue.png')
+  },
+  {
+    id: 2,
+    name: 'Điện thoại Vsmart Joy 3 - Hàng chính hãng',
+    rating: 5,
+    currentPrice: '1.790.000 đ',
+    oldPrice: '1.790.000 đ',
+    color: 'đỏ',
+    supplier: 'Tiki Trading',
+    image: require('../assets/phone/vs_red.png')
+  },
+  {
+    id: 3,
+    name: 'Điện thoại Vsmart Joy 3 - Hàng chính hãng',
+    rating: 5,
+    currentPrice: '1.790.000 đ',
+    oldPrice: '1.790.000 đ',
+    color: 'đen',
+    supplier: 'Tiki Trading',
+    image: require('../assets/phone/vs_black.png')
+  },
+  {
+    id: 4,
+    name: 'Điện thoại Vsmart Joy 3 - Hàng chính hãng',
+    rating: 5,
+    currentPrice: '1.790.000 đ',
+    oldPrice: '1.790.000 đ',
+    color: 'trắng',
+    supplier: 'Tiki Trading',
+    image: require('../assets/phone/vs_silver.png')
+  }
+]
+
+const ProductDetailScreen = ({route, navigation}) => {
+  const [phone, setPhone] = useState(phones[0]);
+
+  const showChooseProductColor = () => {
+    navigation.navigate('ChooseProductColor', {phone: phone});
+  }
+
+  const {color} = route.params || phone.color;
+
+  useEffect(() => {
+    phones.forEach((phone) => {
+      if(phone.color === color) {
+        setPhone(phone);
+      }
+    })
+  }, [route.params]);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.imageContainer}>
-        <Image source={require('../../bai01/assets/vs_blue.png')} style={styles.phone}/>
+        <Image source={phone.image} style={styles.phone}/>
       </View>
 
       <Text style={styles.productName}>Điện thoại Vsmart Joy 3 - Hàng chính hãng</Text>
 
       <View style={styles.ratingContainer}>
         <View style={styles.ratingStartGroup}>
-          <Image source={require('../../bai01/assets/star.png')}/>
-          <Image source={require('../../bai01/assets/star.png')}/>
-          <Image source={require('../../bai01/assets/star.png')}/>
-          <Image source={require('../../bai01/assets/star.png')}/>
-          <Image source={require('../../bai01/assets/star.png')}/>
+          {
+            Array(phone.rating).fill().map((_, i) => (
+              <Image key={i} source={require('../assets/star.png')} />
+            ))
+          }
         </View>
         <Text>(Xem 828 đánh giá)</Text>
       </View>
@@ -27,16 +87,14 @@ const ProductDetailScreen = ({navigation}) => {
 
         <Text style={styles.priceGurantee}>
           Ở ĐÂU RẺ HƠN HOÀN TIỀN &nbsp;  
-          <Image source={require('../../bai01/assets/Group 1.png')} style={styles.seeDetail}/>
+          <Image source={require('../assets/Group 1.png')} style={styles.seeDetail}/>
         </Text>
 
         <TouchableOpacity style={styles.colorButton} onPress={
-            () => {
-                navigation.navigate('ChooseProductColor');
-            }
+            showChooseProductColor
         }>
           <Text style={styles.colorButtonText}>4 MÀU - CHỌN MÀU</Text>
-          <Image source={require('../../bai01/assets/Vector.png')}/>
+          <Image source={require('../assets/Vector.png')}/>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.purschaseButton}>
@@ -59,6 +117,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   phone: {
+    resizeMode: 'contain',
   },
   productName: {
     fontSize: 15,
