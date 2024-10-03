@@ -1,12 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import ChatScreen from './component/ChatScreen';
-import SearchScreen from './component/SearchScreen';
+import ChatScreen from './page/ChatScreen';
+import SearchScreen from './page/SearchScreen';
 
 export default function App() {
   return (
-    <ChatScreen />
-    // <SearchScreen />
+    // <ChatScreen />
+    <SearchScreen />
   );
 }
 
