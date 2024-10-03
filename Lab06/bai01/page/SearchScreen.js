@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {TextInput, TouchableOpacity, SafeAreaView, Text, View, FlatList, Image, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 
-const SearchScreen = () => {
+const SearchScreen = ({navigation}) => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -61,7 +61,7 @@ const SearchScreen = () => {
         <SafeAreaView style={styles.safeView}>
             <View style={styles.container}>
                 <View style={styles.header}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
                         <Icon name="arrow-left" size={24} color="#fff" />
                     </TouchableOpacity>
                     <View style={styles.searchBar}>

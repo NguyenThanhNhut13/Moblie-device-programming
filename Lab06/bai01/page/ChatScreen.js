@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { FlatList, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-const ChatScreen = () => {
+const ChatScreen = ({navigation}) => {
 
     const [data, setData] = useState([]);
     const [isLoading, setLoading] = useState(true);
@@ -40,7 +40,7 @@ const ChatScreen = () => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Image source={require('../assets/back.png')} style={styles.backButton} />
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>Chat</Text>
