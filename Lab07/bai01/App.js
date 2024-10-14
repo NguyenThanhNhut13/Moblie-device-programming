@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import ManageTaskScreen from './pages/MangageTaskScreen';
+import ManageTaskScreen from './pages/ManageTaskScreen';
 import TaskListScreen from './pages/TaskListScreen';
 import AddJobScreen from './pages/AddJobScreen';
 
