@@ -3,7 +3,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import { useState, useEffect } from 'react';
 import useApi from '../hook/useApi';
 import { useDispatch, useSelector } from 'react-redux';
-import { addTodo, updateTodo, deleteTodo, setTodos } from '../Redux/actions';
+import { addTodo, updateTodo, deleteTodo, setTodos, fetchTodos } from '../Redux/actions';
 
 const TaskListScreen = () => {
     const renderItem = ({item}) => {
@@ -14,7 +14,7 @@ const TaskListScreen = () => {
                   <Text style={styles.itemText}>{item}</Text>
                 </View>
                 <View style={styles.itemActionGroup}>
-                  <TouchableOpacity style={styles.buttonEdit} onPress={() => navigation.navigate('AddJob', {action: 'edit', data: userData, oldJob: item})}>
+                  <TouchableOpacity style={styles.buttonEdit} onPress={() => handleEdit(item)}>
                     <Icon name="edit-3" size={24} color="red" />
                   </TouchableOpacity>
                   <TouchableOpacity style={styles.buttonDelete} onPress={() => handleDelete(item)}>
@@ -25,23 +25,18 @@ const TaskListScreen = () => {
         );
     }
 
-    
-    
-    // const {data} = route.params;
-    
-    
+    const {getByName} = useApi('https://64598ce84eb3f674df924e51.mockapi.io/users');
+
     const dispatch = useDispatch();
+    const todos = useSelector((state) => state.todos);
 
     const [search, setSearch] = useState('');
-    const {deleteJob, getByName} = useApi('https://64598ce84eb3f674df924e51.mockapi.io/users');
-    // const [loading, setLoading] = useState(false);
-
-    const [userData, setUserData] = useState([]);
+    const [userData, setUserData] = useState({});   
+    const [action, setAction] = useState('');
 
     const fetchData = async () => {
         const data = await getByName('Thanh Nhứt');
         setUserData(data);
-        return data.jobs || [];
     }
 
     useEffect(() => {
@@ -49,46 +44,16 @@ const TaskListScreen = () => {
     }, []);
 
     useEffect(() => {
-        console.log(userData.jobs);
-        dispatch(setTodos(userData.jobs)); // Gọi action để fetch dữ liệu từ API
+        dispatch(fetchTodos());
     }, [userData]);
-
-    
 
     const [modalVisible, setModalVisible] = useState(false);
     const [newJob, setNewJob] = useState('');
-
-    const todos = useSelector(state => state.todos);
-
-    const handleDelete = (item) => {
-      Alert.alert(
-        'Delete job', 
-        `Are you sure to delete ${item}?`, 
-        [
-          {
-            text: 'Cancel',
-            style: 'cancel'
-          }, 
-          {
-            text: 'OK',
-            onPress: async () => {
-              await deleteJob(data.name, item);
-              setUserData(await getByName(data.name));
-              Alert.alert('Delete job', 'Delete job successfully');
-            }
-          }
-        ]);
-    }
+    const [oldJob, setOldJob] = useState('');
 
     const filteredJobs = search.trim() === ''
     ? todos 
     : todos.filter(job => job.includes(search));
-
-    // useEffect(() => {
-    //   if (data) {
-    //     setUserData(data);
-    //   }
-    // }, [data]);
 
     const handleAddTodo = () => {
         if (newJob.trim()) {
@@ -99,16 +64,57 @@ const TaskListScreen = () => {
             Alert.alert('Add job', 'Job name is required');
             return;
         }
-        
     }
 
-    
+    const handleEdit = (item) => {
+        setAction('edit');
+        setOldJob(item);
+        setNewJob(item);
+        setModalVisible(true);
+    }
+
+    const handleSave = () => {
+        if (newJob.trim()) {
+            if (newJob === oldJob) {
+                setNewJob('');
+                return;
+            }
+            dispatch(updateTodo(oldJob, newJob));
+            Alert.alert('Edit job', 'Edit job successfully');
+            setModalVisible(false);
+            setNewJob('');  
+        } else {
+            Alert.alert('Edit job', 'Job name is required');
+            return;
+        }
+    }
+
+
+    const handleDelete = (item) => {
+        Alert.alert(
+          'Delete job', 
+          `Are you sure to delete ${item}?`, 
+          [
+            {
+              text: 'Cancel',
+              style: 'cancel'
+            }, 
+            {
+              text: 'OK',
+              onPress: () => {
+                  dispatch(deleteTodo(item));
+                  Alert.alert('Delete job', 'Delete job successfully');
+                  fetchData();
+              }
+            }
+          ]);
+      }
 
     return (
         <SafeAreaView style={styles.container}>
         <StatusBar barStyle="dark-content" backgroundColor="#fff" />
             <View style={styles.header}>
-                <Icon name="arrow-left" size={20} color="black" onPress={() => navigation.navigate('ManageTask')} />
+                <Icon name="arrow-left" size={20} color="black" onPress={() => {}} />
                 <View style={styles.headerContent}>
                     <View style={styles.headerImageContainer}>
                         <Image style={styles.headerImage} source={{uri: userData.image}} />
@@ -122,17 +128,19 @@ const TaskListScreen = () => {
             <View style={styles.input}>
                 <Icon name="search" size={20} color="black" style={{marginRight: 8}} />
                 <TextInput 
+                  style={{width: '90%'}}
                   placeholder='Search'
                   value={search}
                   onChangeText={newSearch => setSearch(newSearch)}
                 />
             </View>
             <FlatList style={styles.listItem}
+                showsVerticalScrollIndicator={false}
                 data={filteredJobs}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={renderItem}
             />
-            <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>
+            <TouchableOpacity style={styles.button} onPress={() => {setModalVisible(true); setAction('add')}}>
                 <Icon name="plus" size={20} color="white" />
             </TouchableOpacity>
 
@@ -146,7 +154,7 @@ const TaskListScreen = () => {
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
                         <Text style={styles.modalTitle}>
-                            Add new job
+                            {action === 'add' ? 'Add new job' : 'Edit job'}
                         </Text>
                         <View style={styles.inputModalContainer}>
                             <Icon name="check-square" size={24} color="green" />    
@@ -158,14 +166,14 @@ const TaskListScreen = () => {
                             />
                         </View>
                         <View style={styles.buttonModalContainer}>
-                            <TouchableOpacity style={styles.buttonAddModalAdd} onPress={() => handleAddTodo()}>
-                                <Text style={styles.buttonAddModalAddText}>
-                                    Add
-                                </Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.buttonAddModalCancel} onPress={() => setModalVisible(false)}>
+                            <TouchableOpacity style={styles.buttonAddModalCancel} onPress={() => {setModalVisible(false); setNewJob('');}}>
                                 <Text style={styles.buttonAddModalCancelText}>
                                     Cancel
+                                </Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.buttonAddModalAdd} onPress={() => {action === 'edit' ? handleSave() : handleAddTodo()}}>
+                                <Text style={styles.buttonAddModalAddText}>
+                                    {action === 'add' ? 'Add' : 'Save'}
                                 </Text>
                             </TouchableOpacity>
                         </View>
