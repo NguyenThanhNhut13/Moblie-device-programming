@@ -16,7 +16,6 @@ function todoReducer(state = initialState, action) {
         case FETCH_TODOS_REQUEST:
             return { ...state, loading: true, error: null};
         case FETCH_TODOS_SUCCESS:
-            console.log(action.payload);
             return { ...state, loading: false, todos: action.payload}; 
         case FETCH_TODOS_FAILURE:
             return { ...state, loading: false, error: action.payload};

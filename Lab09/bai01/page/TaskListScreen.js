@@ -3,7 +3,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import { useState, useEffect } from 'react';
 import useApi from '../hook/useApi';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchTodoRequest} from '../redux/actions';
+import { addTodoRequest, deleteTodoRequest, fetchTodoRequest, updateTodoRequest} from '../redux/actions';
 
 const TaskListScreen = () => {
     const renderItem = ({item}) => {
@@ -45,20 +45,22 @@ const TaskListScreen = () => {
 
     useEffect(() => {
         dispatch(fetchTodoRequest());
-        console.log('fetch data: ', todos);
     }, [userData]);
 
     const [modalVisible, setModalVisible] = useState(false);
     const [newJob, setNewJob] = useState('');
     const [oldJob, setOldJob] = useState('');
 
+    // Filter jobs
     const filteredJobs = search.trim() === ''
     ? todos 
     : todos.filter(job => job.includes(search));
 
+
+    // Handle add new job
     const handleAddTodo = () => {
         if (newJob.trim()) {
-            dispatch(addTodo(newJob));
+            dispatch(addTodoRequest(newJob));
             setModalVisible(false);
             setNewJob('');
         } else {
@@ -80,7 +82,7 @@ const TaskListScreen = () => {
                 setNewJob('');
                 return;
             }
-            dispatch(updateTodo(oldJob, newJob));
+            dispatch(updateTodoRequest(oldJob, newJob));
             Alert.alert('Edit job', 'Edit job successfully');
             setModalVisible(false);
             setNewJob('');  
@@ -90,7 +92,7 @@ const TaskListScreen = () => {
         }
     }
 
-
+    // Handle delete job
     const handleDelete = (item) => {
         Alert.alert(
           'Delete job', 
@@ -103,7 +105,7 @@ const TaskListScreen = () => {
             {
               text: 'OK',
               onPress: () => {
-                  dispatch(deleteTodo(item));
+                  dispatch(deleteTodoRequest(item));
                   Alert.alert('Delete job', 'Delete job successfully');
                   fetchData();
               }

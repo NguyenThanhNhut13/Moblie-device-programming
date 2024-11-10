@@ -50,9 +50,9 @@ export const addTodoFailure = (error) => ({
 
 // Update todo
 
-export const updateTodoRequest = (todo) => ({
+export const updateTodoRequest = (oldJob, newJob) => ({
     type: UPDATE_TODO_REQUEST,
-    payload: todo,
+    payload: {oldJob, newJob},
 });
 
 export const updateTodoSuccess = (todos) => ({
@@ -67,8 +67,9 @@ export const updateTodoFailure = (error) => ({
 
 
 // Delete todo
-export const deleteTodoRequest = () => ({
+export const deleteTodoRequest = (todo) => ({
     type: DELETE_TODO_REQUEST,
+    payload: todo,
 });
 
 export const deleteTodoSuccess = (todos) => ({
