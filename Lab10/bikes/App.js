@@ -13,6 +13,7 @@ import { NavigationContainer } from "@react-navigation/native";
 const Stack= createStackNavigator()
 export default function App() {
   return (
+    <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName="start">
             <Stack.Screen name="start" component={StartScreen}/>
@@ -21,6 +22,7 @@ export default function App() {
             {/* <Stack.Screen name="dashboard" component={DashboardScreen}/> */}
         </Stack.Navigator>
     </NavigationContainer>
+    </Provider>
   );
 }
 

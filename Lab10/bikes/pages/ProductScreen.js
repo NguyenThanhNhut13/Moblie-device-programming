@@ -1,5 +1,8 @@
 import { Image, StyleSheet, Text, SafeAreaView, TouchableOpacity, View, ScrollView, FlatList } from "react-native"
-import Icon from 'react-native-vector-icons/Feather'
+import Icon from 'react-native-vector-icons/Feather';
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchBikes } from "../redux/slices/BikeSlice";
 
 const ProductScreen = ({navigation}) => {
 
@@ -69,17 +72,20 @@ const ProductScreen = ({navigation}) => {
         }
         ]
 
-    // const [typeChoose, setTypeChoose] = useState(types[0]);
-    // useEffect(() => {
-    //     const fet = async () => {
-    //         if(typeChoose.id === 1) {
-    //             await dispatch(fetchBikes())
-    //         } else {
-    //             await dispatch(findByType(typeChoose.name))
-    //         }
-    //     }
-    //     fet();
-    // }, [typeChoose])
+    const [typeChoose, setTypeChoose] = useState(types[0]);
+    const dispatch = useDispatch();
+    const bikes = useSelector((state) => state.bikes.bikes);
+
+    useEffect(() => {
+        const fet = async () => {
+            if(typeChoose.id === 1) {
+                await dispatch(fetchBikes())
+            } else {
+                await dispatch(findByType(typeChoose.name))
+            }
+        }
+        fet();
+    }, [typeChoose])
                     
 
 
@@ -114,7 +120,7 @@ const ProductScreen = ({navigation}) => {
                 ))}
             </ScrollView>
             <FlatList
-                data={products}
+                data={bikes}
                 renderItem={({item}) => renderItem(item)}
                 keyExtractor={item => item.id}
                 numColumns={2}
