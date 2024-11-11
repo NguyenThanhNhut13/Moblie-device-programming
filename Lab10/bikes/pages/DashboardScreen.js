@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, FlatList, Alert } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, FlatList, Alert, TouchableOpacity } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { addBike,  } from '../redux/slices/BikeSlice';
+import Icon from 'react-native-vector-icons/Feather';
 
 export const DashboardScreen = ({ navigation }) => {
   const [name, setName] = useState('');
@@ -8,7 +11,8 @@ export const DashboardScreen = ({ navigation }) => {
   const [price, setPrice] = useState('');
   const [description, setDescription] = useState('');
   const [type, setType] = useState('');
-  const [products, setProducts] = useState([]);
+  const dispatch = useDispatch();
+
 
   const handleAddProduct = () => {
     if (!name || !image || !discount || !price || !description || !type) {
@@ -17,7 +21,6 @@ export const DashboardScreen = ({ navigation }) => {
     }
 
     const newProduct = {
-      id: Date.now().toString(),
       name,
       image,
       discount,
@@ -26,8 +29,8 @@ export const DashboardScreen = ({ navigation }) => {
       type,
     };
 
+    dispatch(addBike(newProduct));
 
-    setProducts([...products, newProduct]);
     // Reset form fields
     setName('');
     setImage('');
@@ -39,6 +42,9 @@ export const DashboardScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity onPress={() => navigation.navigate('start')}>
+        <Icon name="chevron-left" size={30} color="#333" />
+      </TouchableOpacity>
       <Text style={styles.title}>Thêm sản phẩm mới</Text>
       
       <TextInput
@@ -82,17 +88,6 @@ export const DashboardScreen = ({ navigation }) => {
 
       <Button title="Thêm sản phẩm" onPress={handleAddProduct} />
 
-      <FlatList
-        data={products}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.productItem}>
-            <Text style={styles.productName}>{item.name}</Text>
-            <Text>{item.price} VND</Text>
-            <Text>Giảm giá: {item.discount}%</Text>
-          </View>
-        )}
-      />
     </View>
   );
 };
