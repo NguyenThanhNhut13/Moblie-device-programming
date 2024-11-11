@@ -48,13 +48,16 @@ const styles = StyleSheet.create({
     },
     button: {
         backgroundColor: "#E94141",
-        padding: 10,
-        borderRadius: 5,
-        marginVertical: 20
+        paddingHorizontal: 10,
+        paddingVertical: 15,
+        borderRadius: 15,
+        marginVertical: 20,
+        width: '80%',
     },
     buttonText: {
         color: "white",
-        fontSize: 18
+        fontSize: 18,
+        textAlign: "center"
     }
     
 })
