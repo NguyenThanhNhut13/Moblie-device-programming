@@ -12,6 +12,15 @@ const fetchBikes = createAsyncThunk('fetchBikes', async () => {
     }
 })
 
+const findByType = createAsyncThunk('findByType', async (type) => {
+    try {
+        const response = await axios.get(`${URL_API}?type=${type}`)
+        return response.data;
+    } catch (error) {
+        console.log(error)
+    }
+})
+
 const BikeSlice = createSlice({
     name: "bikes",
     initialState: {
@@ -24,8 +33,11 @@ const BikeSlice = createSlice({
         builder.addCase(fetchBikes.fulfilled, (state, action) => {
             state.bikes = action.payload;
         })
+        builder.addCase(findByType.fulfilled, (state, action) => {
+            state.bikes = action.payload;
+        })
     }
 })
 
 export default BikeSlice.reducer;
-export { fetchBikes };  
+export { fetchBikes, findByType };
