@@ -24,7 +24,7 @@ const ProductScreen = ({navigation}) => {
     [
         {
         "name": "Awesome Steel Bacon",
-        "image": "https://loremflickr.com/640/480/transport",
+        "image": "https://s3-alpha-sig.figma.com/img/241c/1c58/11168d8e6671f151053b8a6c8424a1a8?Expires=1732492800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=pN3GEPMMamz7Zm0Com3QIo7h2zNn58kWKqP70KTwyjjcgjZtShTWRGO8NGEauv9QioW-Su6mMzNeLevW9SLrBOEFgv4-fg2L6xP7J3XPWnNvVboTjhit13Btp054K3Qp9zMOPpqj14Dn~JJIbwI5YhZ1JSbz6epBoX1mH-022OxltSK0SccZHDuiS2v3od3pvm9LdMGUaybqjKGsCXuO2xexUXR6L~XsWbcdTvee5VgW3Vc-Lbw6mDrDs-VkDHc9DGBz3zqD5U61C0Mi~tLq0pcAdrIWpzbQZj8XMrF3LXcjfwBbLaE8DDPedXjqjw86vFae6gcMucMBMph-avb3TQ__",
         "discount": "20",
         "price": "134.00",
         "description": "The Football Is Good For Training And Recreational Purposes",
@@ -80,12 +80,16 @@ const ProductScreen = ({navigation}) => {
     //     }
     //     fet();
     // }, [typeChoose])
+                    
+
 
     const renderItem = (item) => {
         return (
             <View style={styles.productContainer}>
                 <Icon name="heart" size={20} color="#000" style={styles.iconHeart}/>
-                <Image source={{uri: item.image}} style={styles.productImage}/>
+                <TouchableOpacity onPress={() => navigation.navigate("productDetail", {product: item})}>
+                    <Image source={{uri: item.image}} style={styles.productImage}/>
+                </TouchableOpacity>
                 <Text style={styles.productName}>{item.name}</Text>
                 <Text style={styles.productPrice}>${item.price}</Text>
             </View>
@@ -101,6 +105,7 @@ const ProductScreen = ({navigation}) => {
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 style={styles.typeButtonContainer}
+
             >   
                 {types.map(type => (
                     <TouchableOpacity key={type.id} style={styles.typeButton}>
