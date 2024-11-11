@@ -16,6 +16,9 @@ const StartScreen = ({navigation}) => {
             <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("products")}>
                 <Text style={styles.buttonText}>Get Started</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("dashboard")}>
+                <Text style={styles.buttonText}>Dashboard</Text>
+            </TouchableOpacity>
         </SafeAreaView>
     )
 }
